@@ -1,13 +1,17 @@
-'use strict';
+"use strict";
 
-const Koa = require('koa');
+const Koa = require("koa");
+const bodyParser = require("koa-bodyparser");
+const { setupRoutes } = require("./routes");
+const { setupMiddlewares } = require("./http/middlewares");
+const { server } = require("./config");
+
 const app = new Koa();
-const router = require('./lib/routes');
-const PORT = 8080;
 
-app.use(require('koa-bodyparser')());
-app.use(router.routes());
-app.use(router.allowedMethods());
+setupMiddlewares(app);
 
-app.listen(PORT);
-console.log('Listening on http://localhost:%s/', PORT);
+app.use(bodyParser());
+setupRoutes(app);
+
+app.listen(server.PORT);
+console.log("Listening on http://localhost:%s/", server.PORT);
